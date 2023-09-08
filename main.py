@@ -10,7 +10,7 @@ import sys
 import re
 import os
 
-mirrors = ["https://api.chimu.moe/v1/download/", "https://osu.direct/api/d/", "https://api.nerinyan.moe/d/"]
+mirrors = ["https://api.chimu.moe/v1/download/", "https://osu.direct/api/d/"]
 
 
 class Options(TypedDict):
