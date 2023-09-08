@@ -1,9 +1,11 @@
+from urllib.parse import unquote
 from typing import TypedDict
+
 from threading import Thread
 from time import sleep
+
 import requests
 import glob
-import html
 import sys
 import re
 import os
@@ -56,9 +58,9 @@ def download(og_mirror, mirror_index, path, beatmapset_id, retry=False) -> bool:
     else:
         name = f"{beatmapset_id}.osz"
     if name[0] == '"':
-        name.replace('"', "")
-    name = html.unescape(name)
-    with open(name, "wb") as f:
+        name = name.replace('"', "")
+    name = unquote(name).replace("/", "")
+    with open(f"{path}/{name}", "wb") as f:
         f.write(r.content)
     print(f"downloaded {beatmapset_id}")
     sleep(0.5)
@@ -96,12 +98,14 @@ def main():
                 pass
     if not options['force_download']:
         for file in glob.glob(f"{options['songs_path']}/*") + glob.glob(f"{options['download_path']}/*"):
+            id = 0
             try:
+                id = int(file.split("/")[1].split()[0].strip())
                 id = int(file.split()[0].strip())
-                if id in ids:
-                    ids.remove(id)
             except:
                 pass
+            if id in ids:
+                ids.remove(id)
     queue = generate_queue(ids, len(mirrors))
     for ids in queue:
         threads = list()
