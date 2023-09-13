@@ -86,8 +86,10 @@ def parse_options(args) -> Options:
     return options
 
 
-def main():
+def main(overwrite=False):
     options = parse_options(sys.argv)
+    if overwrite:
+        options = parse_options(overwrite)
     os.makedirs(options['download_path'], exist_ok=True)
     ids = list()
     with open(options['list_path']) as f:
